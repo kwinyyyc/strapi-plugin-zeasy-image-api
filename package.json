@@ -1,0 +1,64 @@
+{
+  "name": "strapi-plugin-image-api",
+  "version": "0.0.0",
+  "description": "This is the description of the plugin.",
+  "main": "./index.js",
+  "strapi": {
+    "name": "Image Api",
+    "icon": "plug",
+    "description": "Allow you to search and import image to your strapi rich text field"
+  },
+  "scripts": {
+    "prepublish": "npm run build",
+    "start": "webpack --watch",
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "Kwinten",
+    "email": "kwinten.yc.li@gmail.com",
+    "url": "https://github.com/kwinyyyc"
+  },
+  "maintainers": [
+    {
+      "name": "Kwinten",
+      "email": "kwinten.yc.li@gmail.com",
+      "url": "https://github.com/kwinyyyc"
+    }
+  ],
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "@babel/preset-react": "^7.10.1",
+    "@buffetjs/core": "^3.1.1",
+    "@buffetjs/custom": "^3.1.1",
+    "babel-loader": "^8.1.0",
+    "css-loader": "^3.5.3",
+    "file-loader": "^6.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "strapi-helper-plugin": "^3.0.0",
+    "styled-components": "^5.1.1",
+    "svg-loader": "^0.0.2",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "file-type": "^14.6.1",
+    "uuid": "^8.1.0"
+  },
+  "peerDependencies": {
+    "@buffetjs/core": "^3.1.1",
+    "@buffetjs/custom": "^3.1.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "strapi-helper-plugin": "^3.0.0",
+    "styled-components": "^5.1.1"
+  }
+}

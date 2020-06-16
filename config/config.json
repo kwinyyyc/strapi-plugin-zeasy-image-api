@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "providerOptions": {
+    "unsplash": { "appName": "", "accessKey": "" }
+  }
+}
