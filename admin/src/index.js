@@ -1,12 +1,11 @@
-import pluginPkg from "../../package.json";
-import pluginId from "./pluginId";
-import Initializer from "./containers/Initializer";
-import lifecycles from "./lifecycles";
-import trads from "./translations";
+import pluginPkg from '../../package.json';
+import pluginId from './pluginId';
+import Initializer from './containers/Initializer';
+import lifecycles from './lifecycles';
+import trads from './translations';
 
 export default (strapi) => {
-  const pluginDescription =
-    pluginPkg.strapi.description || pluginPkg.description;
+  const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
 
   const plugin = {
     blockerComponent: null,

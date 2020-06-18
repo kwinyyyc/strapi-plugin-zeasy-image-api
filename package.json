@@ -9,9 +9,9 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "**/*.{js,jsx,ts,tsx}": [
       "npx prettier --write",
-      "git add"
+      "eslint *.js --fix-dry-run"
     ]
   },
   "strapi": {
@@ -24,7 +24,7 @@
     "start": "webpack --watch",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --config .prettierrc  \"*.{js,json,css,scss,html,md}\" --write"
+    "format": "prettier --config .prettierrc  \"**/*.{js,html,md}\" --write"
   },
   "author": {
     "name": "Kwinten",
@@ -53,6 +53,7 @@
     "css-loader": "^3.5.3",
     "eslint": "^7.2.0",
     "eslint-config-airbnb": "^18.1.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
     "file-loader": "^6.0.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",

@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import styled from "styled-components";
-import { GlobalPagination, InputsIndex as Input } from "strapi-helper-plugin";
-import ImageApiModal from "./ImageApiModal";
-import { v4 as uuidv4 } from "uuid";
-import { Button } from "@buffetjs/core";
-import axios from "axios";
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { GlobalPagination, InputsIndex as Input } from 'strapi-helper-plugin';
+import ImageApiModal from './ImageApiModal';
+import { v4 as uuidv4 } from 'uuid';
+import { Button } from '@buffetjs/core';
+import axios from 'axios';
 
 const ImageApiSearchContainer = styled.div`
   border: 1px solid #e3e9f3;
@@ -61,7 +61,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
     _limit: 10,
   });
   const [targetImage, setTargetImage] = useState({});
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [focused, setFocused] = useState(true);
   const [imageList, setImageList] = useState([]);
 
@@ -85,25 +85,15 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
         pageCount,
       })
       .catch(({ message }) => {
-        alert("Failed to get images due to " + message);
+        alert('Failed to get images due to ' + message);
       });
     setImageList(data);
   };
 
-  const onImageClicked = async ({
-    id,
-    description,
-    userName,
-    userProfileUrl,
-    src,
-  }) => {
+  const onImageClicked = async ({ id, description, userName, userProfileUrl, src }) => {
     setIsOpen(true);
     const fileName =
-      description &&
-      description.split(" ").length <= 10 &&
-      description.length <= 100
-        ? description
-        : uuidv4();
+      description && description.split(' ').length <= 10 && description.length <= 100 ? description : uuidv4();
     setTargetImage({ id, src, userName, userProfileUrl, fileName });
   };
   const setFileName = (event) => {
@@ -116,7 +106,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
     setTargetImage({ ...targetImage, altText: event.target.value });
   };
   const onImageImported = (content) => {
-    const newValue = editor.value ? editor.value : "" + content;
+    const newValue = editor.value ? editor.value : '' + content;
     onEditorChange({ target: { name: editor.name, value: newValue } });
   };
 
@@ -154,13 +144,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
             />
             <Button
               color="primary"
-              onClick={async () =>
-                await searchUnsplashImage(
-                  query,
-                  pagination._page,
-                  pagination._limit
-                )
-              }
+              onClick={async () => await searchUnsplashImage(query, pagination._page, pagination._limit)}
               type="button"
             >
               Search
@@ -189,11 +173,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
                   </ImageItem>
                 );
               })}
-              <GlobalPagination
-                count={imageList.total}
-                params={pagination}
-                onChangeParams={onChangePage}
-              />
+              <GlobalPagination count={imageList.total} params={pagination} onChangeParams={onChangePage} />
               <ImageApiModal
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
