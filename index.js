@@ -1,3 +1,3 @@
-import ImageApiPanel from "./src/components/ImageApi/ImageApiPanel";
+import ImageApiPanel from './src/components/ImageApi/ImageApiPanel';
 
 export { ImageApiPanel };

@@ -3,6 +3,17 @@
   "version": "0.0.0",
   "description": "This is the description of the plugin.",
   "main": "./index.js",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "npx prettier --write",
+      "eslint *.js --fix-dry-run"
+    ]
+  },
   "strapi": {
     "name": "Image Api",
     "icon": "plug",
@@ -12,7 +23,8 @@
     "prepublish": "npm run build",
     "start": "webpack --watch",
     "build": "webpack",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --config .prettierrc  \"**/*.{js,html,md}\" --write"
   },
   "author": {
     "name": "Kwinten",
@@ -37,9 +49,17 @@
     "@babel/preset-react": "^7.10.1",
     "@buffetjs/core": "^3.1.1",
     "@buffetjs/custom": "^3.1.1",
+    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.3",
+    "eslint": "^7.2.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.20.0",
     "file-loader": "^6.0.0",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "strapi-helper-plugin": "^3.0.0",

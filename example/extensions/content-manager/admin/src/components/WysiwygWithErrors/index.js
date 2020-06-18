@@ -4,17 +4,17 @@
  *
  */
 
-import React from "react";
-import PropTypes from "prop-types";
-import { isEmpty, isFunction } from "lodash";
-import cn from "classnames";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { isEmpty, isFunction } from 'lodash';
+import cn from 'classnames';
 
-import { Description, ErrorMessage, Label } from "@buffetjs/styles";
-import { Error } from "@buffetjs/core";
+import { Description, ErrorMessage, Label } from '@buffetjs/styles';
+import { Error } from '@buffetjs/core';
 
-import Wysiwyg from "../Wysiwyg";
-import Wrapper from "./Wrapper";
-import { ImageApiPanel } from "strapi-plugin-image-api/build";
+import Wysiwyg from '../Wysiwyg';
+import Wrapper from './Wrapper';
+import { ImageApiPanel } from 'strapi-plugin-image-api/build';
 
 // eslint-disable-next-line react/prefer-stateless-function
 class WysiwygWithErrors extends React.Component {
@@ -42,27 +42,14 @@ class WysiwygWithErrors extends React.Component {
     } = this.props;
 
     return (
-      <Error
-        inputError={inputError}
-        name={name}
-        type="text"
-        validations={validations}
-      >
+      <Error inputError={inputError} name={name} type="text" validations={validations}>
         {({ canCheck, onBlur, error, dispatch }) => {
           const hasError = error && error !== null;
 
           return (
-            <Wrapper
-              className={`${cn(!isEmpty(className) && className)} ${
-                hasError ? "bordered" : ""
-              }`}
-              style={style}
-            >
+            <Wrapper className={`${cn(!isEmpty(className) && className)} ${hasError ? 'bordered' : ''}`} style={style}>
               <Label htmlFor={name}>{label}</Label>
-              <ImageApiPanel
-                editor={{ value, name }}
-                onEditorChange={onChange}
-              />
+              <ImageApiPanel editor={{ value, name }} onEditorChange={onChange} />
               <Wysiwyg
                 {...rest}
                 autoFocus={autoFocus}
@@ -75,12 +62,12 @@ class WysiwygWithErrors extends React.Component {
                 onChange={(e) => {
                   if (!canCheck) {
                     dispatch({
-                      type: "SET_CHECK",
+                      type: 'SET_CHECK',
                     });
                   }
 
                   dispatch({
-                    type: "SET_ERROR",
+                    type: 'SET_ERROR',
                     error: null,
                   });
                   onChange(e);
@@ -91,9 +78,7 @@ class WysiwygWithErrors extends React.Component {
                 tabIndex={tabIndex}
                 value={value}
               />
-              {!hasError && inputDescription && (
-                <Description>{inputDescription}</Description>
-              )}
+              {!hasError && inputDescription && <Description>{inputDescription}</Description>}
               {hasError && <ErrorMessage>{error}</ErrorMessage>}
             </Wrapper>
           );
@@ -105,20 +90,20 @@ class WysiwygWithErrors extends React.Component {
 
 WysiwygWithErrors.defaultProps = {
   autoFocus: false,
-  className: "",
+  className: '',
   deactivateErrorHighlight: false,
   didCheckErrors: false,
   disabled: false,
   error: null,
-  inputClassName: "",
-  inputDescription: "",
+  inputClassName: '',
+  inputDescription: '',
   inputStyle: {},
-  label: "",
+  label: '',
   onBlur: false,
-  placeholder: "",
+  placeholder: '',
   resetProps: false,
   style: {},
-  tabIndex: "0",
+  tabIndex: '0',
   validations: {},
   value: null,
 };
