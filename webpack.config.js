@@ -1,4 +1,6 @@
-var path = require('path');
+/* eslint-disable */
+
+const path = require('path');
 
 module.exports = {
   entry: './index.js',

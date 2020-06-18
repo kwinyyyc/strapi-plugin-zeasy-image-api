@@ -1,0 +1,19 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "env": {
+    "commonjs": true,
+    "es6": true,
+    "node": true,
+    "browser": false
+  },
+  "globals": {
+    "strapi": true,
+    "alert": true,
+    "window": true
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "react/prop-types": "warn"
+  }
+}

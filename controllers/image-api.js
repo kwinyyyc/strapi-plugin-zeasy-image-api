@@ -63,7 +63,7 @@ module.exports = {
       responseType: 'arraybuffer',
     });
     const readBuffer = Buffer.from(imageResponse.data);
-    const { ext, mime } = await FileType.fromBuffer(readBuffer);
+    const { mime } = await FileType.fromBuffer(readBuffer);
     const { optimize } = strapi.plugins.upload.services['image-manipulation'];
     const { buffer, info } = await optimize(readBuffer);
     const metas = {};
