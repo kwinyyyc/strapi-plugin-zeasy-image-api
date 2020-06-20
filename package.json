@@ -28,7 +28,7 @@
     "description": "Allow you to search and import image to your strapi rich text field"
   },
   "scripts": {
-    "prepublish": "npm run build",
+    "prepublish": "rimraf build && npm run build",
     "start": "webpack --watch",
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -72,6 +72,7 @@
     "prettier": "^2.0.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "rimraf": "^3.0.2",
     "strapi-helper-plugin": "^3.0.0",
     "styled-components": "^5.1.1",
     "svg-loader": "^0.0.2",
@@ -90,5 +91,19 @@
     "react-dom": "^16.13.1",
     "strapi-helper-plugin": "^3.0.0",
     "styled-components": "^5.1.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kwinyyyc/strapi-plugin-image-api.git"
+  },
+  "keywords": [
+    "strapi",
+    "plugins",
+    "unsplash",
+    "image"
+  ],
+  "bugs": {
+    "url": "https://github.com/kwinyyyc/strapi-plugin-image-api/issues"
+  },
+  "homepage": "https://github.com/kwinyyyc/strapi-plugin-image-api#readme"
 }
