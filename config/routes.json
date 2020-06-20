@@ -5,7 +5,7 @@
       "path": "/import-unsplash-image",
       "handler": "image-api.importUnsplashImage",
       "config": {
-        "policies": []
+        "policies": ["isAdmin"]
       }
     },
     {
@@ -13,7 +13,7 @@
       "path": "/search-unsplash-images",
       "handler": "image-api.searchUnsplashImages",
       "config": {
-        "policies": []
+        "policies": ["isAdmin"]
       }
     }
   ]

@@ -5,12 +5,10 @@
     "commonjs": true,
     "es6": true,
     "node": true,
-    "browser": false
+    "browser": true
   },
   "globals": {
-    "strapi": true,
-    "alert": true,
-    "window": true
+    "strapi": true
   },
   "rules": {
     "no-unused-vars": "warn",
