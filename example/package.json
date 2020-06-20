@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "A Strapi sample application for using strapi-plugin-image-api",
   "scripts": {
+    "postinstall": "rimraf node_modules/strapi-plugin-image-api/src && rimraf node_modules/strapi-plugin-image-api/example",
     "develop": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",

@@ -2,7 +2,14 @@
   "name": "strapi-plugin-image-api",
   "version": "0.0.0",
   "description": "This is the description of the plugin.",
-  "main": "./index.js",
+  "main": "build/index.js",
+  "files": [
+    "admin",
+    "build",
+    "config",
+    "controllers",
+    "services"
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
