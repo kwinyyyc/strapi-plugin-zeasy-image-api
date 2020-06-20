@@ -77,13 +77,23 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
     }
     const { backendURL, remoteURL } = strapi;
     const imageBaseUrl = backendURL ? backendURL : new URL(remoteURL).origin;
+    const jwtToken = JSON.parse(localStorage.getItem('jwtToken'));
+    if (!jwtToken) {
+      alert('Please login as admin to continue');
+    }
     const searchImageApiEndpoint = `${imageBaseUrl}/image-api/search-unsplash-images`;
     const { data } = await axios
-      .post(searchImageApiEndpoint, {
-        pageNumber,
-        query,
-        pageCount,
-      })
+      .post(
+        searchImageApiEndpoint,
+        {
+          pageNumber,
+          query,
+          pageCount,
+        },
+        {
+          headers: { Authorization: `Bearer ${jwtToken}` },
+        },
+      )
       .catch(({ message }) => {
         alert('Failed to get images due to ' + message);
       });
@@ -113,13 +123,23 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
   const handleSubmit = async () => {
     const { backendURL, remoteURL } = strapi;
     const imageBaseUrl = backendURL ? backendURL : new URL(remoteURL).origin;
+    const jwtToken = JSON.parse(localStorage.getItem('jwtToken'));
+    if (!jwtToken) {
+      alert('Please login as admin to continue');
+    }
     const imageApiEndpoint = `${imageBaseUrl}/image-api/import-unsplash-image`;
-    const result = await axios.post(imageApiEndpoint, {
-      id: targetImage.id,
-      fileName: targetImage.fileName,
-      altText: targetImage.altText,
-      caption: targetImage.caption,
-    });
+    const result = await axios.post(
+      imageApiEndpoint,
+      {
+        id: targetImage.id,
+        fileName: targetImage.fileName,
+        altText: targetImage.altText,
+        caption: targetImage.caption,
+      },
+      {
+        headers: { Authorization: `Bearer ${jwtToken.replace('"', '')}` },
+      },
+    );
     const { url, appName } = result.data;
     const imageUrl = `${imageBaseUrl}${url}`;
     const attributiton = `Photo by [${targetImage.userName}](${targetImage.userProfileUrl}/?utm_source=${appName}&utm_medium=referral) on [Unsplash](https://unsplash.com/?utm_source=${appName}&utm_medium=referral`;
