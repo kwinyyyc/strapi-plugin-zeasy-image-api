@@ -16,6 +16,12 @@ import Wysiwyg from '../Wysiwyg';
 import Wrapper from './Wrapper';
 import { ImageApiPanel } from 'strapi-plugin-image-api';
 
+// Use below for hotreload debugging
+
+// const {
+//   ImageApiPanel,
+// } = require("/Users/kwinten/Documents/workspace/side-project/strapi-plugin-image-api/build");
+
 // eslint-disable-next-line react/prefer-stateless-function
 class WysiwygWithErrors extends React.Component {
   render() {
