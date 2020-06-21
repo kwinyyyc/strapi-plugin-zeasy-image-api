@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { GlobalPagination, InputsIndex as Input } from 'strapi-helper-plugin';
+import { GlobalPagination, InputsIndex as Input, request, prefixFileUrlWithBackendUrl } from 'strapi-helper-plugin';
 import ImageApiModal from './ImageApiModal';
 import { v4 as uuidv4 } from 'uuid';
 import { Button } from '@buffetjs/core';
-import axios from 'axios';
 
 const ImageApiSearchContainer = styled.div`
   border: 1px solid #e3e9f3;
@@ -75,29 +74,13 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
     if (!query) {
       return;
     }
-    const { backendURL, remoteURL } = strapi;
-    const imageBaseUrl = backendURL ? backendURL : new URL(remoteURL).origin;
-    const jwtToken = JSON.parse(localStorage.getItem('jwtToken'));
-    if (!jwtToken) {
-      alert('Please login as admin to continue');
-    }
-    const searchImageApiEndpoint = `${imageBaseUrl}/image-api/search-unsplash-images`;
-    const { data } = await axios
-      .post(
-        searchImageApiEndpoint,
-        {
-          pageNumber,
-          query,
-          pageCount,
-        },
-        {
-          headers: { Authorization: `Bearer ${jwtToken}` },
-        },
-      )
-      .catch(({ message }) => {
-        alert('Failed to get images due to ' + message);
-      });
-    setImageList(data);
+    const response = await request('/image-api/search-unsplash-images', {
+      method: 'POST',
+      body: { pageNumber, query, pageCount },
+    }).catch(({ message }) => {
+      alert('Failed to get images due to ' + message);
+    });
+    setImageList(response);
   };
 
   const onImageClicked = async ({ id, description, userName, userProfileUrl, src }) => {
@@ -121,27 +104,19 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
   };
 
   const handleSubmit = async () => {
-    const { backendURL, remoteURL } = strapi;
-    const imageBaseUrl = backendURL ? backendURL : new URL(remoteURL).origin;
-    const jwtToken = JSON.parse(localStorage.getItem('jwtToken'));
-    if (!jwtToken) {
-      alert('Please login as admin to continue');
-    }
-    const imageApiEndpoint = `${imageBaseUrl}/image-api/import-unsplash-image`;
-    const result = await axios.post(
-      imageApiEndpoint,
-      {
+    const response = await request('/image-api/import-unsplash-image', {
+      method: 'POST',
+      body: {
         id: targetImage.id,
         fileName: targetImage.fileName,
         altText: targetImage.altText,
         caption: targetImage.caption,
       },
-      {
-        headers: { Authorization: `Bearer ${jwtToken.replace('"', '')}` },
-      },
-    );
-    const { url, appName } = result.data;
-    const imageUrl = `${imageBaseUrl}${url}`;
+    }).catch(({ message }) => {
+      alert('Failed to download image due to ' + message);
+    });
+    const { url, appName } = response;
+    const imageUrl = prefixFileUrlWithBackendUrl(url);
     const attributiton = `Photo by [${targetImage.userName}](${targetImage.userProfileUrl}/?utm_source=${appName}&utm_medium=referral) on [Unsplash](https://unsplash.com/?utm_source=${appName}&utm_medium=referral`;
     const content = `![](${imageUrl}) ${attributiton})`;
     onImageImported(content);
