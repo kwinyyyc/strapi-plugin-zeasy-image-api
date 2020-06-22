@@ -1,9 +1,6 @@
 import React from 'react';
-import { Modal, ModalBody, ModalFooter, HeaderModalTitle } from 'strapi-helper-plugin';
+import { Modal, ModalBody, ModalFooter, HeaderModalTitle, Button, InputsIndex as Input } from 'strapi-helper-plugin';
 import styled from 'styled-components';
-import { Inputs } from '@buffetjs/custom';
-import { Button } from '@buffetjs/core';
-import { Container } from 'reactstrap';
 
 const StyledImg = styled.img`
   flex: 1 1 100%;
@@ -21,11 +18,8 @@ const ModalSection = styled.section`
   padding: 0 30px;
 `;
 
-const ContainerFluid = styled(Container)`
-  padding: 0;
-`;
-
-const Wrapper = styled(ContainerFluid)`
+const Wrapper = styled.div`
+  width: 100%;
   padding-top: 18px;
 `;
 
@@ -76,19 +70,34 @@ const ImageApiModal = ({ isOpen, setIsOpen, targetImage, setFileName, setCaption
                 <div className="col-6">
                   <FormWrapper>
                     <div className="col-12">
-                      <Inputs label="File name" onChange={setFileName} type="text" value={targetImage.fileName} />
+                      <Input
+                        className="col-md-12 col-12"
+                        label="File name"
+                        placeholder="Input filename"
+                        onChange={setFileName}
+                        type="text"
+                        value={targetImage.fileName}
+                      />
                     </div>
                     <div className="col-12">
-                      <Inputs
-                        description="This text will be displayed if the asset can’t be shown."
+                      <Input
+                        className="col-md-12 col-12"
                         label="Alternative text"
+                        placeholder="Input alternative text (Optional)"
                         onChange={setAltText}
                         type="text"
                         value={targetImage.altText}
                       />
                     </div>
                     <div className="col-12">
-                      <Inputs label="Caption" onChange={setCaption} type="text" value={targetImage.caption} />
+                      <Input
+                        className="col-md-12 col-12"
+                        label="Caption"
+                        placeholder="Input caption (Optional)"
+                        onChange={setCaption}
+                        type="text"
+                        value={targetImage.caption}
+                      />
                     </div>
                   </FormWrapper>
                 </div>
@@ -103,10 +112,10 @@ const ImageApiModal = ({ isOpen, setIsOpen, targetImage, setFileName, setCaption
       </ModalBody>
       <ModalFooter>
         <section>
-          <Button type="button" color="cancel" onClick={handleToggle}>
+          <Button type="button" secondary onClick={handleToggle}>
             Cancel
           </Button>
-          <Button type="button" color="success" onClick={handleSubmit}>
+          <Button type="button" primary onClick={handleSubmit}>
             Submit
           </Button>
         </section>

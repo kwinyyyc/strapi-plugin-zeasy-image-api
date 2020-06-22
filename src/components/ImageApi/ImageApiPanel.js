@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { GlobalPagination, InputsIndex as Input, request, prefixFileUrlWithBackendUrl } from 'strapi-helper-plugin';
+import {
+  GlobalPagination,
+  InputsIndex as Input,
+  request,
+  prefixFileUrlWithBackendUrl,
+  Button,
+} from 'strapi-helper-plugin';
 import ImageApiModal from './ImageApiModal';
 import { v4 as uuidv4 } from 'uuid';
-import { Button } from '@buffetjs/core';
 
 const ImageApiSearchContainer = styled.div`
   border: 1px solid #e3e9f3;
@@ -138,7 +143,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
               onChange={(e) => setQuery(e.target.value)}
             />
             <Button
-              color="primary"
+              primary
               onClick={async () => await searchUnsplashImage(query, pagination._page, pagination._limit)}
               type="button"
             >
