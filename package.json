@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-image-api",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "This is the description of the plugin.",
   "main": "build/index.js",
   "files": [
@@ -28,9 +28,10 @@
     "description": "Allow you to search and import image to your strapi rich text field"
   },
   "scripts": {
-    "prepublish": "rimraf build && npm run build",
+    "prepublish": "yarn build",
     "start": "webpack --watch",
-    "build": "webpack",
+    "clean": "rimraf build",
+    "build": "yarn clean && cross-env NODE_ENV=production webpack --mode=production",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --config .prettierrc  \"**/*.{js,html,md}\" --write"
   },
@@ -55,12 +56,11 @@
     "@babel/core": "^7.10.2",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-react": "^7.10.1",
-    "@buffetjs/core": "^3.1.1",
-    "@buffetjs/custom": "^3.1.1",
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-angular": "^8.3.4",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
+    "cross-env": "^7.0.2",
     "css-loader": "^3.5.3",
     "eslint": "^7.2.0",
     "eslint-plugin-import": "^2.21.2",
@@ -85,8 +85,6 @@
     "uuid": "^8.1.0"
   },
   "peerDependencies": {
-    "@buffetjs/core": "^3.1.1",
-    "@buffetjs/custom": "^3.1.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "strapi-helper-plugin": "^3.0.0",
