@@ -3,6 +3,7 @@ import { Modal, ModalBody, ModalFooter, HeaderModalTitle, Button, InputsIndex as
 import styled from 'styled-components';
 
 const StyledImg = styled.img`
+  position: static;
   flex: 1 1 100%;
   object-fit: cover;
   max-width: 100%;
