@@ -8671,7 +8671,7 @@ strapi-plugin-email@3.0.1:
     strapi-utils "3.0.1"
 
 "strapi-plugin-image-api@file:..":
-  version "0.0.0"
+  version "0.0.1"
   dependencies:
     axios "^0.19.2"
     file-type "^14.6.1"

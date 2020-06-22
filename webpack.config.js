@@ -37,6 +37,5 @@ module.exports = {
     react: 'react',
     'react-dom': 'react-dom',
     'styled-components': 'styled-components',
-    'strapi-helper-plugin': 'strapi-helper-plugin',
   },
 };
