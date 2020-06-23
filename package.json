@@ -1,7 +1,7 @@
 {
   "name": "strapi-plugin-image-api",
-  "version": "0.0.3",
-  "description": "This is the description of the plugin.",
+  "version": "0.0.4",
+  "description": "Allow you to search and import image from Unsplash to your strapi rich text field",
   "main": "build/index.js",
   "files": [
     "admin",
@@ -25,7 +25,7 @@
   "strapi": {
     "name": "Image Api",
     "icon": "plug",
-    "description": "Allow you to search and import image to your strapi rich text field"
+    "description": "Allow you to search and import image from Unsplash to your strapi rich text field"
   },
   "scripts": {
     "prepublish": "yarn build",

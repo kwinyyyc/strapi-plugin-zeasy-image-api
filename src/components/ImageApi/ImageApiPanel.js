@@ -59,6 +59,9 @@ const ImageItem = styled.div`
 `;
 
 const ImageApiPanel = ({ editor, onEditorChange }) => {
+  const [hasSearched, setHasSearched] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [pagination, setPagination] = useState({
     _page: 1,
@@ -79,12 +82,18 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
     if (!query) {
       return;
     }
+    setIsSearching(true);
     const response = await request('/image-api/search-unsplash-images', {
       method: 'POST',
       body: { pageNumber, query, pageCount },
-    }).catch(({ message }) => {
-      alert('Failed to get images due to ' + message);
-    });
+    })
+      .catch(({ message }) => {
+        alert('Failed to get images due to ' + message);
+      })
+      .finally(() => {
+        setIsSearching(false);
+      });
+    setHasSearched(true);
     setImageList(response);
   };
 
@@ -109,6 +118,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
   };
 
   const handleSubmit = async () => {
+    setIsImporting(true);
     const response = await request('/image-api/import-unsplash-image', {
       method: 'POST',
       body: {
@@ -117,9 +127,13 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
         altText: targetImage.altText,
         caption: targetImage.caption,
       },
-    }).catch(({ message }) => {
-      alert('Failed to download image due to ' + message);
-    });
+    })
+      .catch(({ message }) => {
+        alert('Failed to download image due to ' + message);
+      })
+      .finally(() => {
+        setIsImporting(false);
+      });
     const { url, appName } = response;
     const imageUrl = prefixFileUrlWithBackendUrl(url);
     const attributiton = `Photo by [${targetImage.userName}](${targetImage.userProfileUrl}/?utm_source=${appName}&utm_medium=referral) on [Unsplash](https://unsplash.com/?utm_source=${appName}&utm_medium=referral`;
@@ -143,6 +157,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
               onChange={(e) => setQuery(e.target.value)}
             />
             <Button
+              loader={isSearching}
               primary
               onClick={async () => await searchUnsplashImage(query, pagination._page, pagination._limit)}
               type="button"
@@ -175,6 +190,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
               })}
               <GlobalPagination count={imageList.total} params={pagination} onChangeParams={onChangePage} />
               <ImageApiModal
+                isImporting={isImporting}
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
                 targetImage={targetImage}
@@ -184,6 +200,8 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
                 handleSubmit={handleSubmit}
               />
             </ImageListContainer>
+          ) : hasSearched ? (
+            <div>Result not found, please refine your query</div>
           ) : null}
         </ImageApiSearchContainer>
       ) : null}

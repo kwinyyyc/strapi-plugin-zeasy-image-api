@@ -43,7 +43,16 @@ const ModalHeader = ({ children }) => {
   );
 };
 
-const ImageApiModal = ({ isOpen, setIsOpen, targetImage, setFileName, setCaption, setAltText, handleSubmit }) => {
+const ImageApiModal = ({
+  isOpen,
+  setIsOpen,
+  isImporting,
+  targetImage,
+  setFileName,
+  setCaption,
+  setAltText,
+  handleSubmit,
+}) => {
   const handleToggle = () => {
     // eslint-disable-next-line no-alert
     const confirm = window.confirm('Confirm to close without save?');
@@ -116,7 +125,7 @@ const ImageApiModal = ({ isOpen, setIsOpen, targetImage, setFileName, setCaption
           <Button type="button" secondary onClick={handleToggle}>
             Cancel
           </Button>
-          <Button type="button" primary onClick={handleSubmit}>
+          <Button loader={isImporting} type="button" primary onClick={handleSubmit}>
             Submit
           </Button>
         </section>
