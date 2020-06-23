@@ -9,6 +9,7 @@ import {
 } from 'strapi-helper-plugin';
 import ImageApiModal from './ImageApiModal';
 import { v4 as uuidv4 } from 'uuid';
+import PropTypes from 'prop-types';
 
 const ImageApiSearchContainer = styled.div`
   border: 1px solid #e3e9f3;
@@ -207,6 +208,11 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
       ) : null}
     </div>
   );
+};
+
+ImageApiPanel.propTypes = {
+  editor: PropTypes.shape({ name: PropTypes.string.isRequired, value: PropTypes.string.isRequired }).isRequired,
+  onEditorChange: PropTypes.func.isRequired,
 };
 
 export default ImageApiPanel;

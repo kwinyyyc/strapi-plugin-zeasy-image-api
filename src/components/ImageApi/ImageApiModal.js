@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, ModalBody, ModalFooter, HeaderModalTitle, Button, InputsIndex as Input } from 'strapi-helper-plugin';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const StyledImg = styled.img`
   position: static;
@@ -132,6 +133,25 @@ const ImageApiModal = ({
       </ModalFooter>
     </Modal>
   );
+};
+
+ImageApiModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
+  isImporting: PropTypes.bool.isRequired,
+  targetImage: PropTypes.shape({
+    fileName: PropTypes.string,
+    src: PropTypes.string,
+    id: PropTypes.string,
+    userName: PropTypes.string,
+    userProfileUrl: PropTypes.string,
+    caption: PropTypes.string,
+    altText: PropTypes.string,
+  }),
+  setFileName: PropTypes.func.isRequired,
+  setCaption: PropTypes.func.isRequired,
+  setAltText: PropTypes.func.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
 };
 
 export default ImageApiModal;
