@@ -1,6 +1,6 @@
 {
   "name": "strapi-plugin-image-api",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "description": "Allow you to search and import image from Unsplash to your strapi rich text field",
   "main": "build/index.js",
   "files": [
