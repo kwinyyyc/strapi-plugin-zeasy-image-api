@@ -123,6 +123,10 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
   };
 
   const handleSubmit = async () => {
+    if (!targetImage.fileName) {
+      alert('File name could not be empty');
+      return;
+    }
     setIsImporting(true);
     const response = await request('/image-api/import-unsplash-image', {
       method: 'POST',
