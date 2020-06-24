@@ -118,7 +118,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
     setTargetImage({ ...targetImage, altText: event.target.value });
   };
   const onImageImported = (content) => {
-    const newValue = editor.value ? editor.value : '' + content;
+    const newValue = editor.value ? `${editor.value} ${content}` : '' + content;
     onEditorChange({ target: { name: editor.name, value: newValue } });
   };
 
