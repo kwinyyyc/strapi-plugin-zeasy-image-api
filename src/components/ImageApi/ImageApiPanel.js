@@ -60,30 +60,34 @@ const ImageItem = styled.div`
 `;
 
 const ImageApiPanel = ({ editor, onEditorChange }) => {
+  const defaultPagination = {
+    _page: 1,
+    _limit: 10,
+  };
   const [hasSearched, setHasSearched] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [pagination, setPagination] = useState({
-    _page: 1,
-    _limit: 10,
-  });
+  const [pagination, setPagination] = useState(defaultPagination);
   const [targetImage, setTargetImage] = useState({});
   const [query, setQuery] = useState('');
   const [focused, setFocused] = useState(true);
   const [imageList, setImageList] = useState([]);
 
   const onChangePage = ({ target }) => {
-    const newPagination = { ...pagination, ...{ _page: target.value } };
-    setPagination(newPagination);
     searchUnsplashImage(query, target.value, pagination._limit);
   };
 
-  const searchUnsplashImage = async (query, pageNumber, pageCount) => {
+  const handleSearch = async (query) => {
     if (!query) {
       return;
     }
+    await searchUnsplashImage(query, defaultPagination._page, defaultPagination._limit);
+  };
+
+  const searchUnsplashImage = async (query, pageNumber, pageCount) => {
     setIsSearching(true);
+    setPagination({ _page: pageNumber, _limit: pageCount });
     const response = await request('/image-api/search-unsplash-images', {
       method: 'POST',
       body: { pageNumber, query, pageCount },
@@ -157,12 +161,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
-            <Button
-              loader={isSearching}
-              primary
-              onClick={async () => await searchUnsplashImage(query, pagination._page, pagination._limit)}
-              type="button"
-            >
+            <Button loader={isSearching} primary onClick={async () => await handleSearch(query)} type="button">
               Search
             </Button>
           </ImageApiSearchBarContainer>
