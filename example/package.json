@@ -4,6 +4,7 @@
   "version": "0.1.0",
   "description": "A Strapi sample application for using strapi-plugin-image-api",
   "scripts": {
+    "reinstall": "yarn add strapi-plugin-image-api@file:../",
     "postinstall": "rimraf node_modules/strapi-plugin-image-api/src && rimraf node_modules/strapi-plugin-image-api/example",
     "develop": "strapi develop",
     "start": "strapi start",
@@ -12,18 +13,18 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "knex": "<0.20.0",
+    "sqlite3": "latest",
     "strapi": "3.0.1",
     "strapi-admin": "3.0.1",
-    "strapi-utils": "3.0.1",
-    "strapi-plugin-content-type-builder": "3.0.1",
-    "strapi-plugin-content-manager": "3.0.1",
-    "strapi-plugin-users-permissions": "3.0.1",
-    "strapi-plugin-email": "3.0.1",
-    "strapi-plugin-upload": "3.0.1",
     "strapi-connector-bookshelf": "3.0.1",
+    "strapi-plugin-content-manager": "3.0.1",
+    "strapi-plugin-content-type-builder": "3.0.1",
+    "strapi-plugin-email": "3.0.1",
     "strapi-plugin-image-api": "file:../",
-    "knex": "<0.20.0",
-    "sqlite3": "latest"
+    "strapi-plugin-upload": "3.0.1",
+    "strapi-plugin-users-permissions": "3.0.1",
+    "strapi-utils": "3.0.1"
   },
   "author": {
     "name": "A Strapi developer"

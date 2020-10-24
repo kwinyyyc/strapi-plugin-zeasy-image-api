@@ -10,6 +10,8 @@ import {
 import ImageApiModal from './ImageApiModal';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
+import constants from '../../../utils/constants';
+const pluginId = require('../../../admin/src/pluginId');
 
 const ImageApiSearchContainer = styled.div`
   border: 1px solid #e3e9f3;
@@ -88,7 +90,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
   const searchUnsplashImage = async (query, pageNumber, pageCount) => {
     setIsSearching(true);
     setPagination({ _page: pageNumber, _limit: pageCount });
-    const response = await request('/image-api/search-unsplash-images', {
+    const response = await request(`/${pluginId}/${constants.routes.searchUnsplashImages}`, {
       method: 'POST',
       body: { pageNumber, query, pageCount },
     })
@@ -102,11 +104,12 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
     setImageList(response);
   };
 
-  const onImageClicked = async ({ id, description, userName, userProfileUrl, src }) => {
+  const onImageClicked = async (targetImage) => {
+    const { originalName } = targetImage;
     setIsOpen(true);
     const fileName =
-      description && description.split(' ').length <= 10 && description.length <= 100 ? description : uuidv4();
-    setTargetImage({ id, src, userName, userProfileUrl, fileName });
+      originalName && originalName.split(' ').length <= 10 && originalName.length <= 100 ? originalName : uuidv4();
+    setTargetImage({ ...targetImage, fileName });
   };
   const setFileName = (event) => {
     setTargetImage({ ...targetImage, fileName: event.target.value });
@@ -128,13 +131,10 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
       return;
     }
     setIsImporting(true);
-    const response = await request('/image-api/import-unsplash-image', {
+    const response = await request(`/${pluginId}/${constants.routes.importUnsplashImage}`, {
       method: 'POST',
       body: {
-        id: targetImage.id,
-        fileName: targetImage.fileName,
-        altText: targetImage.altText,
-        caption: targetImage.caption,
+        targetImage,
       },
     })
       .catch(({ message }) => {
@@ -145,7 +145,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
       });
     const { url, appName } = response;
     const imageUrl = prefixFileUrlWithBackendUrl(url);
-    const attributiton = `Photo by [${targetImage.userName}](${targetImage.userProfileUrl}/?utm_source=${appName}&utm_medium=referral) on [Unsplash](https://unsplash.com/?utm_source=${appName}&utm_medium=referral`;
+    const attributiton = `Photo by [${targetImage.authorName}](${targetImage.authorUrl}/?utm_source=${appName}&utm_medium=referral) on [Unsplash](https://unsplash.com/?utm_source=${appName}&utm_medium=referral`;
     const content = `![](${imageUrl}) ${attributiton})`;
     onImageImported(content);
     setIsOpen(false);
@@ -169,30 +169,18 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
               Search
             </Button>
           </ImageApiSearchBarContainer>
-          {imageList.total ? (
+          {imageList.totalCount ? (
             <ImageListContainer>
-              {imageList.results.map(({ id, urls, description, user }) => {
-                const { name: userName, links: userProfileLinks } = user;
-                const { html: userProfileUrl } = userProfileLinks;
-                const { thumb, regular } = urls;
+              {imageList.items.map((targetImage) => {
+                const { id, urls } = targetImage;
+                const { thumb } = urls;
                 return (
                   <ImageItem key={id}>
-                    <img
-                      onClick={async () =>
-                        await onImageClicked({
-                          id,
-                          description,
-                          userName,
-                          userProfileUrl,
-                          src: regular,
-                        })
-                      }
-                      src={thumb}
-                    />
+                    <img onClick={async () => await onImageClicked(targetImage)} src={thumb} />
                   </ImageItem>
                 );
               })}
-              <GlobalPagination count={imageList.total} params={pagination} onChangeParams={onChangePage} />
+              <GlobalPagination count={imageList.totalCount} params={pagination} onChangeParams={onChangePage} />
               <ImageApiModal
                 isImporting={isImporting}
                 isOpen={isOpen}

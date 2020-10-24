@@ -76,7 +76,9 @@ const ImageApiModal = ({
             <Wrapper>
               <div className="row">
                 <div className="col-6 row">
-                  {targetImage && targetImage.src ? <StyledImg src={targetImage.src} /> : null}
+                  {targetImage && targetImage.urls && targetImage.urls.default ? (
+                    <StyledImg src={targetImage.urls.default} />
+                  ) : null}
                 </div>
                 <div className="col-6">
                   <FormWrapper>
@@ -140,11 +142,16 @@ ImageApiModal.propTypes = {
   setIsOpen: PropTypes.func.isRequired,
   isImporting: PropTypes.bool.isRequired,
   targetImage: PropTypes.shape({
+    originalName: PropTypes.string,
     fileName: PropTypes.string,
-    src: PropTypes.string,
+    urls: PropTypes.shape({
+      original: PropTypes.string,
+      regular: PropTypes.string,
+      default: PropTypes.string,
+    }),
     id: PropTypes.string,
-    userName: PropTypes.string,
-    userProfileUrl: PropTypes.string,
+    authorName: PropTypes.string,
+    authorUrl: PropTypes.string,
     caption: PropTypes.string,
     altText: PropTypes.string,
   }),
