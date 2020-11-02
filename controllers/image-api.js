@@ -22,13 +22,14 @@ const createImportedImage = async (type, imageId, originalId, originalName, orig
 const mapGiphyImagesToStandardImages = (images, pageNumber, pageCount) => {
   const { data, pagination } = images;
   const standardImages = data.map((image) => {
-    const { type, id, user, title, images: imgs } = image;
+    const { type, id, user, title, images: imgs, url } = image;
     const authorName = user ? user.displayName : null;
     const authorUrl = user ? user.profile_url : null;
     const urls = {
+      webUrl: url,
       original: imgs.original.url,
-      thumb: imgs.downsized_small.url,
-      small: imgs.downsized_small.url,
+      thumb: imgs.downsized.url,
+      small: imgs.downsized.url,
       regular: imgs.downsized_medium.url,
       large: imgs.downsized_large.url,
       default: imgs.downsized.url,
@@ -58,6 +59,7 @@ const mapUnsplashImagesToStandardImages = (images, pageNumber, pageCount) => {
     const authorName = user ? user.name : null;
     const authorUrl = user && user.links ? user.links.html : null;
     const urls = {
+      webUrl: links.html,
       original: uris.raw,
       thumb: uris.thumb,
       small: uris.small,
@@ -82,6 +84,29 @@ const mapUnsplashImagesToStandardImages = (images, pageNumber, pageCount) => {
     pageCount,
     totalCount: total,
   };
+};
+
+const uploadImage = async (data, fileName, altText, caption) => {
+  const readBuffer = Buffer.from(data);
+  const { mime } = await FileType.fromBuffer(readBuffer);
+  const { optimize } = strapi.plugins.upload.services['image-manipulation'];
+  const { buffer, info } = await optimize(readBuffer);
+  const metas = {};
+  const fileInfo = { alternativeText: altText, caption };
+  const formattedFile = strapi.plugins.upload.services.upload.formatFileInfo(
+    {
+      filename: fileName,
+      type: mime,
+      size: Buffer.byteLength(buffer),
+    },
+    fileInfo,
+    metas,
+  );
+  const fileData = _.assign(formattedFile, info, {
+    buffer,
+  });
+  const result = await strapi.plugins.upload.services.upload.uploadFileAndPersist(fileData);
+  return result;
 };
 
 module.exports = {
@@ -142,6 +167,7 @@ module.exports = {
     const { targetImage = {} } = ctx.request.body;
     const {
       id: originalId,
+      webUrl,
       originalName,
       urls,
       authorName,
@@ -172,24 +198,7 @@ module.exports = {
     const imageResponse = await axios.get(getImageUrl, {
       responseType: 'arraybuffer',
     });
-    const readBuffer = Buffer.from(imageResponse.data);
-    const { mime } = await FileType.fromBuffer(readBuffer);
-    const { optimize } = strapi.plugins.upload.services['image-manipulation'];
-    const { buffer, info } = await optimize(readBuffer);
-    const metas = {};
-    const fileInfo = { alternativeText: altText, caption };
-    const formattedFile = strapi.plugins.upload.services.upload.formatFileInfo(
-      {
-        filename: fileName,
-        type: mime,
-      },
-      fileInfo,
-      metas,
-    );
-    const fileData = _.assign(formattedFile, info, {
-      buffer,
-    });
-    const result = await strapi.plugins.upload.services.upload.uploadFileAndPersist(fileData);
+    const result = await uploadImage(imageResponse.data, fileName, altText, caption);
     await createImportedImage(
       constants.config.unsplash,
       result.id,
@@ -200,9 +209,59 @@ module.exports = {
       authorUrl,
     );
     const { url } = result;
+    const attribution = `Photo by [${targetImage.authorName}](${targetImage.authorUrl}/?utm_source=${appName}&utm_medium=referral) on [Unsplash](https://unsplash.com/?utm_source=${appName}&utm_medium=referral)`;
+
     ctx.send({
       url,
       appName,
+      attribution,
+    });
+  },
+  importGiphyImage: async (ctx) => {
+    const { targetImage = {} } = ctx.request.body;
+    const {
+      id: originalId,
+      originalName,
+      urls,
+      authorName,
+      authorUrl,
+      fileName = uuidv4(),
+      altText = null,
+      caption = null,
+    } = targetImage;
+    const { default: defaultUrl, webUrl } = urls;
+    if (!originalId || !fileName) {
+      // throw error
+      return;
+    }
+    const { providerOptions } = strapi.plugins[pluginId].config;
+    if (!providerOptions || !providerOptions[constants.config.giphy]) {
+      return;
+    }
+    const { accessKey, appName = '' } = providerOptions[constants.config.giphy];
+    if (!accessKey) {
+      throw new Error('Access Key must be provided');
+    }
+    const imageResponse = await axios.get(defaultUrl, {
+      responseType: 'arraybuffer',
+    });
+    const result = await uploadImage(imageResponse.data, fileName, altText, caption);
+    await createImportedImage(
+      constants.config.giphy,
+      result.id,
+      originalId,
+      originalName,
+      defaultUrl,
+      authorName,
+      authorUrl,
+    );
+    const { url } = result;
+    const attribution = `[Powered by Giphy](${webUrl})`;
+
+    ctx.send({
+      url,
+      appName,
+      attribution,
     });
   },
 };

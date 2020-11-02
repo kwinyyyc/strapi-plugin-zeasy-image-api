@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import {
+  HeaderNav,
   GlobalPagination,
   InputsIndex as Input,
   request,
@@ -8,14 +9,16 @@ import {
   Button,
 } from 'strapi-helper-plugin';
 import ImageApiModal from './ImageApiModal';
+import ImageApiTab from './ImageApiTab';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import constants from '../../../utils/constants';
-const pluginId = require('../../../admin/src/pluginId');
+import pluginId from '../../../admin/src/pluginId';
 
 const ImageApiSearchContainer = styled.div`
-  border: 1px solid #e3e9f3;
-  padding: 8px 16px;
+  border-radius: 0.2rem;
+  background-color: #ffffff;
+  box-shadow: 0 0.2rem 0.4rem 0 #e3e9f3;
   box-sizing: border-box;
   display: flex;
   flex-direction: row;
@@ -24,6 +27,7 @@ const ImageApiSearchContainer = styled.div`
 `;
 
 const ImageApiSearchBarContainer = styled.div`
+  padding: 16px;
   flex: 1 1 100%;
   display: flex;
   flex-direction: row;
@@ -61,6 +65,28 @@ const ImageItem = styled.div`
   }
 `;
 
+const StyledTab = styled(ImageApiTab)`
+  display: ${(props) => (props.active ? 'flex' : 'none')};
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+`;
+
+const HeaderTab = styled.div`
+  background-color: ${(props) => (props.active ? '#ffffff' : 'rgb(239, 239, 239)')};
+  font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
+  text-decoration: none;
+  box-shadow: ${(props) => (props.active ? '0 0 2px rgba(#dbdbdb,0.5)' : 'none')};
+  border-top: ${(props) => (props.active ? '0.2rem solid #1c5de7' : 'none')};
+  display: inline-block;
+  height: 40px;
+  line-height: 40px;
+  width: 150px;
+  text-align: center;
+  cursor: ${(props) => (props.active ? 'unset' : 'pointer')};
+`;
+
 const ImageApiPanel = ({ editor, onEditorChange }) => {
   const defaultPagination = {
     _page: 1,
@@ -77,31 +103,50 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
   const [imageList, setImageList] = useState([]);
 
   const onChangePage = ({ target }) => {
-    searchUnsplashImage(query, target.value, pagination._limit);
+    searchGiphyImage(query, target.value, pagination._limit);
   };
 
   const handleSearch = async (query) => {
     if (!query) {
       return;
     }
-    await searchUnsplashImage(query, defaultPagination._page, defaultPagination._limit);
+    await searchUnsplashImages(query, defaultPagination._page, defaultPagination._limit);
   };
 
-  const searchUnsplashImage = async (query, pageNumber, pageCount) => {
-    setIsSearching(true);
-    setPagination({ _page: pageNumber, _limit: pageCount });
+  const searchGiphyImage = async (query, pageNumber, pageCount) => {
+    const response = await request(`/${pluginId}/${constants.routes.searchGiphyImages}`, {
+      method: 'POST',
+      body: { pageNumber, query, pageCount },
+    });
+    return response;
+  };
+
+  const searchUnsplashImages = async (query, pageNumber, pageCount) => {
     const response = await request(`/${pluginId}/${constants.routes.searchUnsplashImages}`, {
       method: 'POST',
       body: { pageNumber, query, pageCount },
-    })
-      .catch(({ message }) => {
-        alert('Failed to get images due to ' + message);
-      })
-      .finally(() => {
-        setIsSearching(false);
-      });
-    setHasSearched(true);
-    setImageList(response);
+    });
+    return response;
+  };
+
+  const importUnsplashImage = async (targetImage) => {
+    const response = await request(`/${pluginId}/${constants.routes.importUnsplashImage}`, {
+      method: 'POST',
+      body: {
+        targetImage,
+      },
+    });
+    return response;
+  };
+
+  const importGiphyImage = async (targetImage) => {
+    const response = await request(`/${pluginId}/${constants.routes.importGiphyImage}`, {
+      method: 'POST',
+      body: {
+        targetImage,
+      },
+    });
+    return response;
   };
 
   const onImageClicked = async (targetImage) => {
@@ -151,13 +196,57 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
     setIsOpen(false);
   };
 
+  const [activeTab, setActiveTab] = useState(0);
+  const tabInfo = [
+    {
+      index: 0,
+      name: 'Unsplash',
+    },
+    {
+      index: 1,
+      name: 'Giphy',
+    },
+  ];
+
   return (
     <div>
       {focused ? (
         <ImageApiSearchContainer>
-          <ImageApiSearchBarContainer>
+          <HeaderTab
+            onClick={() => {
+              setActiveTab(0);
+            }}
+            active={activeTab === 0}
+          >
+            Unsplash
+          </HeaderTab>
+          <HeaderTab
+            onClick={() => {
+              setActiveTab(1);
+            }}
+            active={activeTab === 1}
+          >
+            Giphy
+          </HeaderTab>
+          <StyledTab
+            active={activeTab === 0}
+            importImage={importUnsplashImage}
+            searchImages={searchUnsplashImages}
+            editor={editor}
+            onEditorChange={onEditorChange}
+            name={constants.config.unsplash}
+          />
+          <StyledTab
+            active={activeTab === 1}
+            importImage={importGiphyImage}
+            searchImages={searchGiphyImage}
+            editor={editor}
+            onEditorChange={onEditorChange}
+            name={constants.config.giphy}
+          />
+          {/* <ImageApiSearchBarContainer>
             <StyledInput
-              label="Search images on Unsplash"
+              label={`Search images on ${tabInfo[activeTab].name}`}
               customBootstrapClass="col-md-12"
               placeholder="Type to search"
               type="text"
@@ -194,7 +283,7 @@ const ImageApiPanel = ({ editor, onEditorChange }) => {
             </ImageListContainer>
           ) : hasSearched ? (
             <div>Result not found, please refine your query</div>
-          ) : null}
+          ) : null} */}
         </ImageApiSearchContainer>
       ) : null}
     </div>

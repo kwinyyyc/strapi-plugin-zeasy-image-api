@@ -16,6 +16,8 @@ module.exports = {
     },
   },
   routes: {
+    searchGiphyImages: 'search-giphy-images',
+    importGiphyImage: 'import-giphy-image',
     searchUnsplashImages: 'search-unsplash-images',
     importUnsplashImage: 'import-unsplash-image',
   },
