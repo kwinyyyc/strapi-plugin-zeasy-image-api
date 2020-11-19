@@ -12,19 +12,26 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import constants from '../../../utils/constants';
 import pluginId from '../../../admin/src/pluginId';
-import unsplashLogo from '../../../images/Unsplash_Logo.png';
 
-const ImageApiSearchBarContainer = styled.img`
+const ImageApiSearchBarContainer = styled.div`
   padding: 16px;
   flex: 1 1 100%;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
+  align-items: center;
+`;
+
+const ImageApiSearchBarItem = styled.div`
+  flex: 1 1 100%;
+  display: flex;
   align-items: center;
 `;
 
 const StyledInput = styled(Input)`
   padding: 0 16px 0 0;
   flex: 1 1 auto;
+  margin: 0px;
 `;
 
 const ImageListContainer = styled.div`
@@ -59,7 +66,7 @@ const defaultPagination = {
 };
 ``;
 
-const ImageApiTab = ({ name, editor, onEditorChange, className, searchImages, importImage }) => {
+const ImageApiTab = ({ name, editor, onEditorChange, className, searchImages, importImage, platformLogo }) => {
   const [query, setQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
@@ -95,9 +102,14 @@ const ImageApiTab = ({ name, editor, onEditorChange, className, searchImages, im
       setIsImporting(true);
       const response = await importImage(targetImage);
 
-      const { url, appName, attribution } = response;
+      const { url, appName, attribution, attributionType, attributionUrl } = response;
       const imageUrl = prefixFileUrlWithBackendUrl(url);
-      const content = `![](${imageUrl}) ${attribution}`;
+      const content = `![](${imageUrl})
+            ${
+              attributionType === constants.config.giphy
+                ? `[![via ${constants.config.giphy.toUpperCase()}](${platformLogo}})](${attributionUrl})`
+                : attribution
+            }`;
       onImageImported(content);
       setIsOpen(false);
     } catch (message) {
@@ -135,19 +147,30 @@ const ImageApiTab = ({ name, editor, onEditorChange, className, searchImages, im
   return (
     <div className={className}>
       <ImageApiSearchBarContainer>
-        <StyledInput
-          label={`Search images on ${name}`}
-          customBootstrapClass="col-md-12"
-          placeholder="Type to search"
-          type="text"
-          name="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <img src={unsplashLogo} />
-        <Button loader={isSearching} primary onClick={async () => await handleSearch(query)} type="button">
-          Search
-        </Button>
+        <ImageApiSearchBarItem>
+          <h3 style={{ flex: '1 1 100%', fontSize: '14px' }}>{`Search images on ${name}`}</h3>
+          <span style={{ flex: '0 0 auto', paddingRight: '4px' }}>Powered by: </span>
+          <img width="80px" src={platformLogo} />
+        </ImageApiSearchBarItem>
+        <ImageApiSearchBarItem>
+          <StyledInput
+            customBootstrapClass="col-md-12"
+            placeholder="Type to search"
+            type="text"
+            name="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <Button
+            style={{ marginBottom: '3px' }}
+            loader={isSearching}
+            primary
+            onClick={async () => await handleSearch(query)}
+            type="button"
+          >
+            Search
+          </Button>
+        </ImageApiSearchBarItem>
       </ImageApiSearchBarContainer>
       {imageList.totalCount ? (
         <ImageListContainer>
