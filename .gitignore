@@ -110,3 +110,8 @@ coverage
 exports
 .cache
 build
+
+############################
+# Prebuild
+############################
+config/functions/bootstrap.js

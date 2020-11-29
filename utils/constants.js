@@ -2,6 +2,8 @@ module.exports = {
   config: {
     unsplash: 'unsplash',
     giphy: 'giphy',
+    unsplashLogo: 'unsplashLogo',
+    giphyLogo: 'giphyLogo',
   },
   model: {
     importedImages: 'imported-image',

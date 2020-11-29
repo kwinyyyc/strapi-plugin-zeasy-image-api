@@ -14,6 +14,7 @@ import { Error } from '@buffetjs/core';
 
 import Wysiwyg from '../Wysiwyg';
 import Wrapper from './Wrapper';
+// import { ImageApiPanel } from '/${ABSOLUTE_PATH}/strapi-plugin-image-api/build/index.js';
 import { ImageApiPanel } from 'strapi-plugin-image-api';
 
 // eslint-disable-next-line react/prefer-stateless-function
