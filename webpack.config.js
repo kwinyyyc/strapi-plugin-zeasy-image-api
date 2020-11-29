@@ -54,7 +54,7 @@ const main = {
 };
 
 const others = {
-  entry: './config/functions/pre-bootstrap.js',
+  entry: './src/bootstrap.js',
   output: {
     path: path.resolve(__dirname, 'config/functions'),
     filename: 'bootstrap.js',

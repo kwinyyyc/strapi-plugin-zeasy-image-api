@@ -14,8 +14,8 @@ import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import constants from '../../../utils/constants';
 import pluginId from '../../../admin/src/pluginId';
-import unsplashLogo from '../../../images/Unsplash_Logo.png';
 import giphyLogo from '../../../images/GIPHY_logo.png';
+import unsplashLogo from '../../../images/Unsplash_Logo.png';
 
 const ImageApiSearchContainer = styled.div`
   border-radius: 0.2rem;
