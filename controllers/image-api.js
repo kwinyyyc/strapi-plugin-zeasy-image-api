@@ -29,7 +29,15 @@ const createGiphyLogo = async () => {
   return logoUrl;
 };
 
-const createImportedImage = async ({ type, imageId, originalId, originalName, originalUrl, authorName, authorUrl }) => {
+const createImportedImage = async ({
+  type,
+  imageId,
+  originalId = null,
+  originalName = null,
+  originalUrl = null,
+  authorName = null,
+  authorUrl = null,
+}) => {
   const data = {
     type,
     image: imageId,
