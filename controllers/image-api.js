@@ -7,6 +7,10 @@ const pluginId = require('../admin/src/pluginId');
 const constants = require('../utils/constants');
 const { getAbsoluteServerUrl } = require('strapi-utils');
 
+const generateAbsoluteUrl = (url = '') => {
+  return url.startsWith('http') ? url : `${getAbsoluteServerUrl(strapi.config)}${url}`;
+};
+
 const createGiphyLogo = async () => {
   const pluginStore = strapi.store({
     environment: strapi.config.environment,
@@ -237,10 +241,11 @@ module.exports = {
       authorUrl,
     });
     const { url } = result;
+    const imageAbsUrl = generateAbsoluteUrl(url);
     const attribution = `Photo by [${targetImage.authorName}](${targetImage.authorUrl}/?utm_source=${appName}&utm_medium=referral) on [Unsplash](https://unsplash.com/?utm_source=${appName}&utm_medium=referral)`;
 
     ctx.send({
-      url,
+      url: imageAbsUrl,
       appName,
       attribution,
       attributionType: constants.config.unsplash,
@@ -285,18 +290,19 @@ module.exports = {
       authorUrl,
     });
     const { url } = result;
+    const imageAbsUrl = generateAbsoluteUrl(url);
 
     const logo = await getImportedImage({ type: constants.config.giphyLogo });
-    let logoUrl = logo?.image?.url;
+    let logoUrl = logo && logo.image && logo.image.url ? logo.image.url : undefined;
     if (!logoUrl) {
       logoUrl = await createGiphyLogo();
     }
-    const logoAbsUrl = logoUrl.startsWith('http') ? logoUrl : `${getAbsoluteServerUrl(strapi.config)}${logoUrl}`;
+    const logoAbsUrl = generateAbsoluteUrl(logoUrl);
 
     const attribution = `[![](${logoAbsUrl})](${webUrl})`;
 
     ctx.send({
-      url,
+      url: imageAbsUrl,
       appName,
       attributionType: constants.config.giphy,
       attribution,
