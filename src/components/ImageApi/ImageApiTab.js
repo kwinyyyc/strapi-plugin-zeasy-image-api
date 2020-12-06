@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
-import {
-  HeaderNav,
-  GlobalPagination,
-  InputsIndex as Input,
-  request,
-  prefixFileUrlWithBackendUrl,
-  Button,
-} from 'strapi-helper-plugin';
+import { GlobalPagination, InputsIndex as Input, prefixFileUrlWithBackendUrl, Button } from 'strapi-helper-plugin';
 import ImageApiModal from './ImageApiModal';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
-import constants from '../../../utils/constants';
-import pluginId from '../../../admin/src/pluginId';
 
 const ImageApiSearchBarContainer = styled.div`
   padding: 16px;
