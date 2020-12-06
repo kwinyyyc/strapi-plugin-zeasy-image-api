@@ -84,7 +84,7 @@ const mapGiphyImagesToStandardImages = (images, pageNumber, pageCount) => {
     items: standardImages,
     pageNumber,
     pageCount,
-    totalCount: pagination.total_count,
+    totalCount: pagination.total_count / pagination.count,
   };
 };
 
@@ -122,7 +122,7 @@ const mapUnsplashImagesToStandardImages = (images, pageNumber, pageCount) => {
   };
 };
 
-const uploadImage = async ({ data, fileName, altText, caption, buf, mime }) => {
+const uploadImage = async ({ data, fileName, altText = null, caption = null, buf, mime }) => {
   const readBuffer = buf ? buf : Buffer.from(data);
   let mimeType = mime;
   if (!mime) {

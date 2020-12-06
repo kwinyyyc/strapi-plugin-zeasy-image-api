@@ -104,8 +104,10 @@ const ImageApiTab = ({ name, editor, onEditorChange, className, searchImages, im
 
       const { url, appName, attribution, attributionType, attributionUrl } = response;
       const imageUrl = prefixFileUrlWithBackendUrl(url);
-      const content = `![](${imageUrl})
-            ${attribution}`;
+      const content = `
+![](${imageUrl})
+
+${attribution}`;
       onImageImported(content);
       setIsOpen(false);
     } catch (message) {
