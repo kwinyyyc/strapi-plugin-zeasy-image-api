@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import constants from '../../../utils/constants';
 import pluginId from '../../../admin/src/pluginId';
-import giphyLogo from '../../../images/GIPHY_logo.png';
+import giphyLogo from '../../../images/GIPHY_Icon.png';
 import unsplashLogo from '../../../images/Unsplash_Logo.png';
 
 const ImageApiSearchContainer = styled.div`
