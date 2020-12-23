@@ -5,7 +5,7 @@ const path = require('path');
 const main = {
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'admin/src/components/ImageApi'),
     filename: 'index.js',
     libraryTarget: 'commonjs2',
   },

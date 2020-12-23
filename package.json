@@ -1,11 +1,9 @@
 {
-  "name": "strapi-plugin-image-api",
-  "version": "1.1.0-beta.8",
+  "name": "strapi-plugin-zeasy-image-api",
+  "version": "1.1.0",
   "description": "Allow you to search and import image from Unsplash to the rich text field.",
-  "main": "build/index.js",
   "files": [
     "admin",
-    "build",
     "config",
     "controllers",
     "services",
@@ -32,7 +30,7 @@
   "scripts": {
     "prepublish": "yarn build",
     "start": "webpack --watch",
-    "clean": "rimraf build",
+    "clean": "rimraf admin/src/components/ImageApi",
     "build": "yarn clean && cross-env NODE_ENV=production webpack --mode=production",
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --config .prettierrc  \"**/*.{js,html,md}\" --write"
@@ -97,7 +95,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kwinyyyc/strapi-plugin-image-api.git"
+    "url": "git+https://github.com/kwinyyyc/strapi-plugin-zeasy-image-api.git"
   },
   "keywords": [
     "strapi",
@@ -106,7 +104,7 @@
     "image"
   ],
   "bugs": {
-    "url": "https://github.com/kwinyyyc/strapi-plugin-image-api/issues"
+    "url": "https://github.com/kwinyyyc/strapi-plugin-zeasy-image-api/issues"
   },
-  "homepage": "https://github.com/kwinyyyc/strapi-plugin-image-api#readme"
+  "homepage": "https://github.com/kwinyyyc/strapi-plugin-zeasy-image-api#readme"
 }

@@ -8920,14 +8920,6 @@ strapi-plugin-email@3.0.1:
     strapi-provider-email-sendmail "3.0.1"
     strapi-utils "3.0.1"
 
-"strapi-plugin-image-api@file:../":
-  version "1.1.0-beta.7"
-  dependencies:
-    "@babel/preset-env" "^7.12.1"
-    axios "^0.19.2"
-    file-type "^14.6.1"
-    uuid "^8.1.0"
-
 strapi-plugin-upload@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/strapi-plugin-upload/-/strapi-plugin-upload-3.0.1.tgz#e9a42d372211f18c3fa769eadf40e7bd1a1267d2"
@@ -8983,6 +8975,14 @@ strapi-plugin-users-permissions@3.0.1:
     strapi-helper-plugin "3.0.0"
     strapi-utils "3.0.1"
     uuid "^3.1.0"
+
+"strapi-plugin-zeasy-image-api@file:../":
+  version "1.1.0-beta.11"
+  dependencies:
+    "@babel/preset-env" "^7.12.1"
+    axios "^0.19.2"
+    file-type "^14.6.1"
+    uuid "^8.1.0"
 
 strapi-provider-email-sendmail@3.0.1:
   version "3.0.1"

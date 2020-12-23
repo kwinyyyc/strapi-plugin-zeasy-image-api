@@ -11,83 +11,86 @@ import cn from 'classnames';
 
 import { Description, ErrorMessage, Label } from '@buffetjs/styles';
 import { Error } from '@buffetjs/core';
+import { useStrapi } from 'strapi-helper-plugin';
 
 import Wysiwyg from '../Wysiwyg';
 import Wrapper from './Wrapper';
 // import { ImageApiPanel } from '/${ABSOLUTE_PATH}/strapi-plugin-image-api/build/index.js';
-import { ImageApiPanel } from 'strapi-plugin-image-api';
 
 // eslint-disable-next-line react/prefer-stateless-function
-class WysiwygWithErrors extends React.Component {
-  render() {
-    const {
-      autoFocus,
-      className,
-      deactivateErrorHighlight,
-      disabled,
-      error: inputError,
-      inputClassName,
-      inputDescription,
-      inputStyle,
-      label,
-      name,
-      onBlur: handleBlur,
-      onChange,
-      placeholder,
-      resetProps,
-      style,
-      tabIndex,
-      validations,
-      value,
-      ...rest
-    } = this.props;
+const WysiwygWithErrors = ({
+  autoFocus = false,
+  className = '',
+  deactivateErrorHighlight = false,
+  disabled = false,
+  error: inputError = null,
+  inputClassName = '',
+  inputDescription = '',
+  inputStyle = {},
+  label = '',
+  name,
+  onBlur: handleBlur = false,
+  onChange,
+  placeholder = '',
+  resetProps = false,
+  style = {},
+  tabIndex = '0',
+  validations = {},
+  value = null,
+  ...rest
+}) => {
+  const {
+    strapi: {
+      componentApi: { getComponent },
+    },
+  } = useStrapi();
+  const ImageApiPanel = getComponent('image-api-panel').Component;
 
-    return (
-      <Error inputError={inputError} name={name} type="text" validations={validations}>
-        {({ canCheck, onBlur, error, dispatch }) => {
-          const hasError = error && error !== null;
+  return (
+    <Error inputError={inputError} name={name} type="text" validations={validations}>
+      {({ canCheck, onBlur, error, dispatch }) => {
+        const hasError = error && error !== null;
 
-          return (
-            <Wrapper className={`${cn(!isEmpty(className) && className)} ${hasError ? 'bordered' : ''}`} style={style}>
-              <Label htmlFor={name}>{label}</Label>
-              <ImageApiPanel editor={{ value, name }} onEditorChange={onChange} />
-              <Wysiwyg
-                {...rest}
-                autoFocus={autoFocus}
-                className={inputClassName}
-                disabled={disabled}
-                deactivateErrorHighlight={deactivateErrorHighlight}
-                error={hasError}
-                name={name}
-                onBlur={isFunction(handleBlur) ? handleBlur : onBlur}
-                onChange={(e) => {
-                  if (!canCheck) {
-                    dispatch({
-                      type: 'SET_CHECK',
-                    });
-                  }
-
+        return (
+          <Wrapper className={`${cn(!isEmpty(className) && className)} ${hasError ? 'bordered' : ''}`} style={style}>
+            <Label htmlFor={name}>{label}</Label>
+            <ImageApiPanel editor={{ value, name }} onEditorChange={onChange} />
+            <Wysiwyg
+              {...rest}
+              autoFocus={autoFocus}
+              className={inputClassName}
+              disabled={disabled}
+              deactivateErrorHighlight={deactivateErrorHighlight}
+              error={hasError}
+              name={name}
+              onBlur={isFunction(handleBlur) ? handleBlur : onBlur}
+              onChange={(e) => {
+                if (!canCheck) {
                   dispatch({
-                    type: 'SET_ERROR',
-                    error: null,
+                    type: 'SET_CHECK',
                   });
-                  onChange(e);
-                }}
-                placeholder={placeholder}
-                resetProps={resetProps}
-                style={inputStyle}
-                tabIndex={tabIndex}
-                value={value}
-              />
-              {!hasError && inputDescription && <Description>{inputDescription}</Description>}
-              {hasError && <ErrorMessage>{error}</ErrorMessage>}
-            </Wrapper>
-          );
-        }}
-      </Error>
-    );
-  }
-}
+                }
+
+                dispatch({
+                  type: 'SET_ERROR',
+                  error: null,
+                });
+                onChange(e);
+              }}
+              placeholder={placeholder}
+              resetProps={resetProps}
+              style={inputStyle}
+              tabIndex={tabIndex}
+              value={value}
+            />
+            {!hasError && inputDescription && <Description>{inputDescription}</Description>}
+            {hasError && <ErrorMessage>{error}</ErrorMessage>}
+          </Wrapper>
+        );
+      }}
+    </Error>
+  );
+};
 
 WysiwygWithErrors.defaultProps = {
   autoFocus: false,

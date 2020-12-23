@@ -154,11 +154,15 @@ module.exports = {
     const { pageNumber, query, pageCount } = ctx.request.body;
     const { providerOptions } = strapi.plugins[pluginId].config;
     if (!providerOptions || !providerOptions[constants.config.giphy]) {
-      return;
+      ctx.response.status = 500;
+      ctx.response.message = 'Giphy config not found, please check the readme and provide a valid Giphy config.';
+      return ctx;
     }
     const { accessKey } = providerOptions[constants.config.giphy];
     if (!accessKey) {
-      throw new Error('Access Key must be provided');
+      ctx.response.status = 500;
+      ctx.response.message = 'Giphy Access Key must be provided.';
+      return ctx;
     }
     const offset = (pageNumber - 1) * pageNumber;
     const result = await axios
@@ -180,11 +184,15 @@ module.exports = {
     const { pageNumber, query, pageCount } = ctx.request.body;
     const { providerOptions } = strapi.plugins[pluginId].config;
     if (!providerOptions || !providerOptions[constants.config.unsplash]) {
-      return;
+      ctx.response.status = 500;
+      ctx.response.message = 'Unsplash config not found, please check the readme and provide a valid Unsplash config.';
+      return ctx;
     }
     const { accessKey } = providerOptions[constants.config.unsplash];
     if (!accessKey) {
-      throw new Error('Access Key must be provided');
+      ctx.response.status = 500;
+      ctx.response.message = 'Unsplash Access Key must be provided.';
+      return ctx;
     }
     const result = await axios
       .get(constants.api.unsplash.searchImages, {
@@ -218,17 +226,18 @@ module.exports = {
     } = targetImage;
     const { default: defaultUrl } = urls;
     if (!originalId || !fileName) {
-      // throw error
-      return;
+      ctx.response.status = 500;
+      ctx.response.message = 'Invalid file name.';
+      return ctx;
     }
     const { providerOptions } = strapi.plugins[pluginId].config;
-    if (!providerOptions || !providerOptions[constants.config.unsplash]) {
-      return;
-    }
+    // if (!providerOptions || !providerOptions[constants.config.unsplash]) {
+    //   return;
+    // }
     const { accessKey, appName = '' } = providerOptions[constants.config.unsplash];
-    if (!accessKey) {
-      throw new Error('Access Key must be provided');
-    }
+    // if (!accessKey) {
+    //   throw new Error('Access Key must be provided');
+    // }
     const response = await axios.get(`${constants.api.unsplash.downloadImage}/${originalId}/download`, {
       headers: {
         authorization: `Client-ID ${accessKey}`,
@@ -273,17 +282,18 @@ module.exports = {
     } = targetImage;
     const { default: defaultUrl, webUrl } = urls;
     if (!originalId || !fileName) {
-      // throw error
-      return;
+      ctx.response.status = 500;
+      ctx.response.message = 'Invalid file name.';
+      return ctx;
     }
     const { providerOptions } = strapi.plugins[pluginId].config;
-    if (!providerOptions || !providerOptions[constants.config.giphy]) {
-      return;
-    }
+    // if (!providerOptions || !providerOptions[constants.config.giphy]) {
+    //   return;
+    // }
     const { accessKey, appName = '' } = providerOptions[constants.config.giphy];
-    if (!accessKey) {
-      throw new Error('Access Key must be provided');
-    }
+    // if (!accessKey) {
+    //   throw new Error('Access Key must be provided');
+    // }
     const imageResponse = await axios.get(defaultUrl, {
       responseType: 'arraybuffer',
     });
