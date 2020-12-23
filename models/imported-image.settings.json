@@ -1,0 +1,47 @@
+{
+  "kind": "collectionType",
+  "collectionName": "image-api_imported_images",
+  "info": {
+    "name": "Imported Image"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "unsplash",
+        "unsplashLogo",
+        "giphy",
+        "giphyLogo"
+      ],
+      "required": true
+    },
+    "image": {
+      "model": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images"
+      ],
+      "plugin": "upload",
+      "required": true
+    },
+    "original_id": {
+      "type": "string"
+    },
+    "original_name": {
+      "type": "string"
+    },
+    "original_url": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "author_url": {
+      "type": "string"
+    }
+  }
+}

@@ -1,8 +1,0 @@
-{
-  "providerOptions": {
-    "unsplash": {
-      "appName": "${process.env.UNSPLASH_APP_NAME}",
-      "accessKey": "${process.env.UNSPLASH_ACCESS_KEY}"
-    }
-  }
-}

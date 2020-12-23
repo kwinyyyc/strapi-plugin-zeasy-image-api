@@ -3,6 +3,7 @@ import pluginId from './pluginId';
 import Initializer from './containers/Initializer';
 import lifecycles from './lifecycles';
 import trads from './translations';
+import { ImageApiPanel } from './components/ImageApi/index';
 
 export default (strapi) => {
   const pluginDescription = pluginPkg.strapi.description || pluginPkg.description;
@@ -25,6 +26,8 @@ export default (strapi) => {
     preventComponentRendering: false,
     trads,
   };
+
+  strapi.registerComponent({ name: 'image-api-panel', Component: ImageApiPanel });
 
   return strapi.registerPlugin(plugin);
 };

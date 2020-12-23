@@ -2,6 +2,22 @@
   "routes": [
     {
       "method": "POST",
+      "path": "/import-giphy-image",
+      "handler": "image-api.importGiphyImage",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/search-giphy-images",
+      "handler": "image-api.searchGiphyImages",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
       "path": "/import-unsplash-image",
       "handler": "image-api.importUnsplashImage",
       "config": {

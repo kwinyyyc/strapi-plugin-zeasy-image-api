@@ -2,10 +2,10 @@
 
 const path = require('path');
 
-module.exports = {
+const main = {
   entry: './src/index.js',
   output: {
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'admin/src/components/ImageApi'),
     filename: 'index.js',
     libraryTarget: 'commonjs2',
   },
@@ -24,8 +24,21 @@ module.exports = {
         use: ['svg-loader'],
       },
       {
-        test: /\.(eot|woff|woff2|svg|ttf)([\?]?.*)$/,
+        test: /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
         use: ['file-loader'],
+      },
+      {
+        test: /\.(gif|png|jpg)(\?.*$|$)/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+              name: '[name].[ext]',
+              publicPath: 'images/',
+            },
+          },
+        ],
       },
       {
         test: /\.css$/i,
@@ -39,3 +52,31 @@ module.exports = {
     'styled-components': 'styled-components',
   },
 };
+
+const others = {
+  entry: './src/bootstrap.js',
+  output: {
+    path: path.resolve(__dirname, 'config/functions'),
+    filename: 'bootstrap.js',
+    libraryTarget: 'commonjs2',
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(gif|png|jpg)(\?.*$|$)/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+              name: '[name].[ext]',
+              publicPath: 'images/',
+            },
+          },
+        ],
+      },
+    ],
+  },
+};
+
+module.exports = [main, others];
