@@ -37,6 +37,7 @@ const createImportedImage = async ({
   originalUrl = null,
   authorName = null,
   authorUrl = null,
+  webUrl = null,
 }) => {
   const data = {
     type,
@@ -46,6 +47,7 @@ const createImportedImage = async ({
     original_url: originalUrl,
     author_name: authorName,
     author_url: authorUrl,
+    web_url: webUrl,
   };
   await strapi.query(constants.model.importedImages, pluginId).create(data);
 };
@@ -256,6 +258,7 @@ module.exports = {
       originalUrl: defaultUrl,
       authorName,
       authorUrl,
+      webUrl,
     });
     const { url } = result;
     const imageAbsUrl = generateAbsoluteUrl(url);
@@ -306,6 +309,7 @@ module.exports = {
       originalUrl: defaultUrl,
       authorName,
       authorUrl,
+      webUrl,
     });
     const { url } = result;
     const imageAbsUrl = generateAbsoluteUrl(url);
