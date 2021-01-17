@@ -50,6 +50,31 @@ With npm:
      }
    }
    ```
+Or with strapi 3.xxx add in config/plugins.js
+
+```
+module.exports = ({ env }) => {
+  return {
+    'zeasy-image-api': {
+      providerOptions: {
+        unsplash: {
+          appName: env('UNSPLASH_APP_NAME'),
+          accessKey: env('UNSPLASH_ACCESS_KEY'),
+        },
+        giphy: {
+          accessKey: env('GIPHY_API_KEY'),
+        },
+      },
+    },
+  };
+};```
+Then make sure you have below variables in your .env file
+UNSPLASH_APP_NAME=XXXXXXX
+UNSPLASH_ACCESS_KEY=XXXXXX
+GIPHY_API_KEY=XXXXXX
+
+
+
 
 ### Option 2, without React based wysiwyg strapi plugin installed
 
