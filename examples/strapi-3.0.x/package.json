@@ -23,7 +23,7 @@
     "strapi-plugin-email": "3.0.1",
     "strapi-plugin-upload": "3.0.1",
     "strapi-plugin-users-permissions": "3.0.1",
-    "strapi-plugin-zeasy-image-api": "file:../",
+    "strapi-plugin-zeasy-image-api": "file:../../",
     "strapi-utils": "3.0.1"
   },
   "author": {
