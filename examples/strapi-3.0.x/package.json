@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "description": "A Strapi sample application for using strapi-plugin-zeasy-image-api",
   "scripts": {
-    "reinstall": "yarn add strapi-plugin-zeasy-image-api@file:../",
-    "postinstall": "rimraf node_modules/strapi-plugin-zeasy-image-api/src && rimraf node_modules/strapi-plugin-zeasy-image-api/example",
+    "reinstall": "yarn add strapi-plugin-zeasy-image-api@file:../../",
+    "postinstall": "rimraf node_modules/strapi-plugin-zeasy-image-api/src && rimraf node_modules/strapi-plugin-zeasy-image-api/examples",
     "develop": "strapi develop",
     "start": "strapi start",
     "build": "strapi build",
@@ -23,7 +23,7 @@
     "strapi-plugin-email": "3.0.1",
     "strapi-plugin-upload": "3.0.1",
     "strapi-plugin-users-permissions": "3.0.1",
-    "strapi-plugin-zeasy-image-api": "file:../",
+    "strapi-plugin-zeasy-image-api": "file:../../",
     "strapi-utils": "3.0.1"
   },
   "author": {

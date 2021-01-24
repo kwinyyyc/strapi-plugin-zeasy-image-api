@@ -1,0 +1,42 @@
+{
+  "name": "strapi-3-4-x-html",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A Strapi application",
+  "scripts": {
+    "reinstall": "yarn add strapi-plugin-zeasy-image-api@file:../../",
+    "postinstall": "rimraf node_modules/strapi-plugin-zeasy-image-api/src && rimraf node_modules/strapi-plugin-zeasy-image-api/examples",
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "@ckeditor/ckeditor5-react": "^3.0.0",
+    "knex": "<0.20.0",
+    "sqlite3": "5.0.0",
+    "strapi": "3.4.4",
+    "strapi-admin": "3.4.4",
+    "strapi-connector-bookshelf": "3.4.4",
+    "strapi-plugin-ckeditor": "^0.1.0",
+    "strapi-plugin-content-manager": "3.4.4",
+    "strapi-plugin-content-type-builder": "3.4.4",
+    "strapi-plugin-email": "3.4.4",
+    "strapi-plugin-upload": "3.4.4",
+    "strapi-plugin-users-permissions": "3.4.4",
+    "strapi-plugin-zeasy-image-api": "file:../../",
+    "strapi-utils": "3.4.4"
+  },
+  "author": {
+    "name": "A Strapi developer"
+  },
+  "strapi": {
+    "uuid": "77edc9e1-2f37-4c72-a45c-c40012573ef3"
+  },
+  "engines": {
+    "node": ">=10.16.0 <=14.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
+}
