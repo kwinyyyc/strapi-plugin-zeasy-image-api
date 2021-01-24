@@ -92,14 +92,8 @@ const ImageApiTab = ({ name, editor, onEditorChange, className, searchImages, im
     try {
       setIsImporting(true);
       const response = await importImage(targetImage);
-
-      const { url, appName, attribution, attributionType, attributionUrl } = response;
-      const imageUrl = prefixFileUrlWithBackendUrl(url);
-      const content = `
-![](${imageUrl})
-
-${attribution}`;
-      onImageImported(content);
+      const { imageContent } = response;
+      onImageImported(imageContent);
       setIsOpen(false);
     } catch (message) {
       alert('Failed to download image due to ' + message);

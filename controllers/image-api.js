@@ -7,6 +7,36 @@ const pluginId = require('../admin/src/pluginId');
 const constants = require('../utils/constants');
 const { getAbsoluteServerUrl } = require('strapi-utils');
 
+const catchUnauthorizedResponse = ({ ctx, platform }) => (error) => {
+  if (error.response && error.response.status === 403) {
+    ctx.throw(403, `Authorization error calling ${platform}, please verify the credentials.`);
+  }
+  ctx.throw(500, 'Internal server error');
+};
+
+const catchImageDownloadResponse = ({ ctx, platform }) => (error) => {
+  ctx.throw(500, `Failed to download image from ${platform} due to ${error.message}`);
+};
+
+const getProviderConfigByPlatform = ({ platform }) => {
+  let isValid = true;
+  let message = '';
+  const { providerOptions } = strapi.plugins[pluginId].config;
+  if (providerOptions === 'undefined' || !providerOptions || !providerOptions[platform]) {
+    isValid = false;
+    message = `${platform} config not found, please check the readme and provide a valid ${platform} config.`;
+    return { isValid, message };
+  }
+  const { accessKey, appName = '' } = providerOptions[platform];
+  if (accessKey === 'undefined' || !accessKey) {
+    isValid = false;
+    message = `${platform} Access Key must be provided.`;
+    return { isValid, message };
+  }
+  const { isHtmlEditor = false } = providerOptions;
+  return { isValid, message, accessKey, isHtmlEditor, appName };
+};
+
 const generateAbsoluteUrl = (url = '') => {
   return url.startsWith('http') ? url : `${getAbsoluteServerUrl(strapi.config)}${url}`;
 };
@@ -154,16 +184,11 @@ const uploadImage = async ({ data, fileName, altText = null, caption = null, buf
 module.exports = {
   searchGiphyImages: async (ctx) => {
     const { pageNumber, query, pageCount } = ctx.request.body;
-    const { providerOptions } = strapi.plugins[pluginId].config;
-    if (!providerOptions || !providerOptions[constants.config.giphy]) {
+    const platform = constants.config.giphy;
+    const { isValid, message, accessKey, isHtmlEditor, appName } = getProviderConfigByPlatform({ platform });
+    if (!isValid) {
       ctx.response.status = 500;
-      ctx.response.message = 'Giphy config not found, please check the readme and provide a valid Giphy config.';
-      return ctx;
-    }
-    const { accessKey } = providerOptions[constants.config.giphy];
-    if (!accessKey) {
-      ctx.response.status = 500;
-      ctx.response.message = 'Giphy Access Key must be provided.';
+      ctx.response.message = message;
       return ctx;
     }
     const offset = (pageNumber - 1) * pageNumber;
@@ -176,24 +201,17 @@ module.exports = {
           limit: pageCount,
         },
       })
-      .catch(({ message }) => {
-        alert('Failed to get image ' + message);
-      });
+      .catch(catchUnauthorizedResponse({ ctx, platform }));
     const { data } = result;
     return mapGiphyImagesToStandardImages(data, pageNumber, pageCount);
   },
   searchUnsplashImages: async (ctx) => {
     const { pageNumber, query, pageCount } = ctx.request.body;
-    const { providerOptions } = strapi.plugins[pluginId].config;
-    if (!providerOptions || !providerOptions[constants.config.unsplash]) {
+    const platform = constants.config.unsplash;
+    const { isValid, message, accessKey, isHtmlEditor, appName } = getProviderConfigByPlatform({ platform });
+    if (!isValid) {
       ctx.response.status = 500;
-      ctx.response.message = 'Unsplash config not found, please check the readme and provide a valid Unsplash config.';
-      return ctx;
-    }
-    const { accessKey } = providerOptions[constants.config.unsplash];
-    if (!accessKey) {
-      ctx.response.status = 500;
-      ctx.response.message = 'Unsplash Access Key must be provided.';
+      ctx.response.message = message;
       return ctx;
     }
     const result = await axios
@@ -207,9 +225,7 @@ module.exports = {
           Authorization: `Client-ID ${accessKey}`,
         },
       })
-      .catch(({ message }) => {
-        alert('Failed to get image ' + message);
-      });
+      .catch(catchUnauthorizedResponse({ ctx, platform }));
     const { data } = result;
     return mapUnsplashImagesToStandardImages(data, pageNumber, pageCount);
   },
@@ -232,26 +248,29 @@ module.exports = {
       ctx.response.message = 'Invalid file name.';
       return ctx;
     }
-    const { providerOptions } = strapi.plugins[pluginId].config;
-    // if (!providerOptions || !providerOptions[constants.config.unsplash]) {
-    //   return;
-    // }
-    const { accessKey, appName = '' } = providerOptions[constants.config.unsplash];
-    // if (!accessKey) {
-    //   throw new Error('Access Key must be provided');
-    // }
-    const response = await axios.get(`${constants.api.unsplash.downloadImage}/${originalId}/download`, {
-      headers: {
-        authorization: `Client-ID ${accessKey}`,
-      },
-    });
+    const platform = constants.config.unsplash;
+    const { isValid, message, accessKey, isHtmlEditor, appName } = getProviderConfigByPlatform({ platform });
+    if (!isValid) {
+      ctx.response.status = 500;
+      ctx.response.message = message;
+      return ctx;
+    }
+    const response = await axios
+      .get(`${constants.api.unsplash.downloadImage}/${originalId}/download`, {
+        headers: {
+          authorization: `Client-ID ${accessKey}`,
+        },
+      })
+      .catch(catchUnauthorizedResponse({ ctx, platform }));
     const getImageUrl = response.data.url;
-    const imageResponse = await axios.get(getImageUrl, {
-      responseType: 'arraybuffer',
-    });
+    const imageResponse = await axios
+      .get(getImageUrl, {
+        responseType: 'arraybuffer',
+      })
+      .catch(catchImageDownloadResponse({ ctx, platform }));
     const result = await uploadImage({ data: imageResponse.data, fileName, altText, caption });
     await createImportedImage({
-      type: constants.config.unsplash,
+      type: platform,
       imageId: result.id,
       originalId,
       originalName,
@@ -262,13 +281,22 @@ module.exports = {
     });
     const { url } = result;
     const imageAbsUrl = generateAbsoluteUrl(url);
-    const attribution = `Photo by [${targetImage.authorName}](${targetImage.authorUrl}/?utm_source=${appName}&utm_medium=referral) on [Unsplash](https://unsplash.com/?utm_source=${appName}&utm_medium=referral)`;
+    let imageContent = '';
+    const gtmPrepend = '?utm_source=${appName}&utm_medium=referral';
+    if (isHtmlEditor) {
+      imageContent = `
+        <div class="${pluginId}-image-container">
+          <img src="${imageAbsUrl}" />
+          <p>Photo by <a href="${targetImage.authorUrl}/?${gtmPrepend}" target="_blank">${targetImage.authorName}</a> on <a href="https://unsplash.com/${gtmPrepend}">Unsplash</a></p>
+        </div>
+        `;
+    } else {
+      imageContent = `![](${imageAbsUrl})
+Photo by [${targetImage.authorName}](${targetImage.authorUrl}/?${gtmPrepend}) on [Unsplash](https://unsplash.com/${gtmPrepend})`;
+    }
 
     ctx.send({
-      url: imageAbsUrl,
-      appName,
-      attribution,
-      attributionType: constants.config.unsplash,
+      imageContent,
     });
   },
   importGiphyImage: async (ctx) => {
@@ -289,20 +317,21 @@ module.exports = {
       ctx.response.message = 'Invalid file name.';
       return ctx;
     }
-    const { providerOptions } = strapi.plugins[pluginId].config;
-    // if (!providerOptions || !providerOptions[constants.config.giphy]) {
-    //   return;
-    // }
-    const { accessKey, appName = '' } = providerOptions[constants.config.giphy];
-    // if (!accessKey) {
-    //   throw new Error('Access Key must be provided');
-    // }
-    const imageResponse = await axios.get(defaultUrl, {
-      responseType: 'arraybuffer',
-    });
+    const platform = constants.config.giphy;
+    const { isValid, message, accessKey, isHtmlEditor, appName } = getProviderConfigByPlatform({ platform });
+    if (!isValid) {
+      ctx.response.status = 500;
+      ctx.response.message = message;
+      return ctx;
+    }
+    const imageResponse = await axios
+      .get(defaultUrl, {
+        responseType: 'arraybuffer',
+      })
+      .catch(catchImageDownloadResponse({ ctx, platform }));
     const result = await uploadImage({ data: imageResponse.data, fileName, altText, caption });
     await createImportedImage({
-      type: constants.config.giphy,
+      type: platform,
       imageId: result.id,
       originalId,
       originalName,
@@ -321,14 +350,21 @@ module.exports = {
     }
     const logoAbsUrl = generateAbsoluteUrl(logoUrl);
 
-    const attribution = `[![](${logoAbsUrl})](${webUrl})`;
+    let imageContent = '';
+    if (isHtmlEditor) {
+      imageContent = `
+        <div class="${pluginId}-image-container">
+          <img src="${imageAbsUrl}" />
+          <a href="${webUrl}"><img src="${logoAbsUrl}" /></a>
+        </div>
+        `;
+    } else {
+      imageContent = `![](${imageAbsUrl})
+[![](${logoAbsUrl})](${webUrl})`;
+    }
 
     ctx.send({
-      url: imageAbsUrl,
-      appName,
-      attributionType: constants.config.giphy,
-      attribution,
-      attributionUrl: webUrl,
+      imageContent,
     });
   },
 };

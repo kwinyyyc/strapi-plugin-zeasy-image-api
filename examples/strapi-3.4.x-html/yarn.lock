@@ -9634,7 +9634,7 @@ strapi-plugin-users-permissions@3.4.4:
     strapi-utils "3.4.4"
     uuid "^3.1.0"
 
-"strapi-plugin-zeasy-image-api@file:../..":
+"strapi-plugin-zeasy-image-api@file:../../":
   version "1.1.1"
   dependencies:
     "@babel/preset-env" "^7.12.1"
