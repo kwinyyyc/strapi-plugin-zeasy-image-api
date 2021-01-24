@@ -249,7 +249,7 @@ module.exports = {
       return ctx;
     }
     const platform = constants.config.unsplash;
-    const { isValid, message, accessKey, isHtmlEditor, appName } = getProviderConfigByPlatform({ platform });
+    const { isValid, message, accessKey, isHtmlEditor, appName = '' } = getProviderConfigByPlatform({ platform });
     if (!isValid) {
       ctx.response.status = 500;
       ctx.response.message = message;
@@ -282,17 +282,17 @@ module.exports = {
     const { url } = result;
     const imageAbsUrl = generateAbsoluteUrl(url);
     let imageContent = '';
-    const gtmPrepend = '?utm_source=${appName}&utm_medium=referral';
+    const gtmPrepend = `?utm_source=${appName}&utm_medium=referral`;
     if (isHtmlEditor) {
       imageContent = `
         <div class="${pluginId}-image-container">
           <img src="${imageAbsUrl}" />
-          <p>Photo by <a href="${targetImage.authorUrl}/?${gtmPrepend}" target="_blank">${targetImage.authorName}</a> on <a href="https://unsplash.com/${gtmPrepend}">Unsplash</a></p>
+          <p>Photo by <a href="${targetImage.authorUrl}/${gtmPrepend}" target="_blank">${targetImage.authorName}</a> on <a href="https://unsplash.com/${gtmPrepend}">Unsplash</a></p>
         </div>
         `;
     } else {
       imageContent = `![](${imageAbsUrl})
-Photo by [${targetImage.authorName}](${targetImage.authorUrl}/?${gtmPrepend}) on [Unsplash](https://unsplash.com/${gtmPrepend})`;
+Photo by [${targetImage.authorName}](${targetImage.authorUrl}/${gtmPrepend}) on [Unsplash](https://unsplash.com/${gtmPrepend})`;
     }
 
     ctx.send({
