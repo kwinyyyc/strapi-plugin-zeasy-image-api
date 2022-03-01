@@ -16,7 +16,7 @@
     "@ckeditor/ckeditor5-react": "^3.0.0",
     "knex": "<0.20.0",
     "sqlite3": "5.0.0",
-    "strapi": "3.4.4",
+    "strapi": "3.6.8",
     "strapi-admin": "3.4.4",
     "strapi-connector-bookshelf": "3.4.4",
     "strapi-plugin-ckeditor": "^0.1.0",
